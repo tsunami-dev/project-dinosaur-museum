@@ -54,7 +54,24 @@ const exampleTicketData = require("../data/tickets");
     calculateTicketPrice(tickets, ticketInfo);
     //> "Entrant type 'kid' cannot be found."
  */
-function calculateTicketPrice(ticketData, ticketInfo) {}
+function calculateTicketPrice(ticketData, ticketInfo) {
+  if (ticketData[ticketInfo.ticketType] === undefined) {
+    console.log(ticketData[ticketInfo.ticketType])
+    return `Ticket type '${ticketInfo.ticketType}' cannot be found.`
+  } else if (!ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType]){
+    return `Entrant type '${ticketInfo.entrantType}' cannot be found.`
+  } else if (ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] && ticketInfo.extras.length === 0) {
+      return ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] 
+  } else if (ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] && ticketInfo.extras.length === 1 && ticketData.extras[ticketInfo.extras[0]] !== undefined) {
+      return ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] + ticketData.extras[ticketInfo.extras[0]].priceInCents[ticketInfo.entrantType]
+  } else if (ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] && ticketInfo.extras.length === 2) {
+      return ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] +  ticketData.extras[ticketInfo.extras[0]].priceInCents[ticketInfo.entrantType] + ticketData.extras[ticketInfo.extras[1]].priceInCents[ticketInfo.entrantType]
+  } else if (ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] && ticketInfo.extras.length === 3) {
+    return ticketData[ticketInfo.ticketType].priceInCents[ticketInfo.entrantType] +  ticketData.extras[ticketInfo.extras[0]].priceInCents[ticketInfo.entrantType] +  ticketData.extras[ticketInfo.extras[1]].priceInCents[ticketInfo.entrantType] + ticketData.extras[ticketInfo.extras[2]].priceInCents[ticketInfo.entrantType]
+  } else if (ticketData.extras[ticketInfo.extras[0]] === undefined) {
+    return `Extra type '${ticketInfo.extras}' cannot be found.`
+  } 
+}
 
 /**
  * purchaseTickets()
@@ -109,7 +126,33 @@ function calculateTicketPrice(ticketData, ticketInfo) {}
     purchaseTickets(tickets, purchases);
     //> "Ticket type 'discount' cannot be found."
  */
-function purchaseTickets(ticketData, purchases) {}
+function purchaseTickets(ticketData, purchases) {
+  let tickets = []
+  let prices = []
+  let extras = []
+  for(let i = 0;i < purchases.length; i++){
+   
+    /*if (ticketData.extras[purchases[i].extras[0]] === undefined) {
+      console.log("extras: " + ticketData.extras[purchases[i].extras[0]])
+      return `Extra type '${purchases[i].extras[0]}' cannot be found.`
+    } if (!ticketData[purchases[i].ticketType] && !ticketData.extras[purchases[i].extras[0]] === undefined){
+      console.log("ticket type: " + ticketData[purchases[i].ticketType])
+      return `Ticket type '${purchases[i].ticketType}' cannot be found.`
+    } else if (!ticketData[purchases[i].entrantType]) {
+      console.log("entrant type: " +ticketData[purchases[i].entrantType])
+      return `Entrant type '${purchases[i].entrantType}' cannot be found.`
+    } */
+    if (ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType] && purchases[i].entrantType === "adult") {
+      console.log("Thank you for visiting the Dinosaur Museum!\n-------------------------------------------\n" + "Adult" + " " + ticketData[purchases[i].ticketType].description + ": " + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00" + "\n-------------------------------------------\nTOTAL: " + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00")
+      return "Thank you for visiting the Dinosaur Museum!\n-------------------------------------------\n" + "Adult" + " " + ticketData[purchases[i].ticketType].description + ": $" + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00" + "\n-------------------------------------------\nTOTAL: $" + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00"
+    } else if (ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType] && purchases[i].entrantType === "child") {
+      return "Thank you for visiting the Dinosaur Museum!\n-------------------------------------------\n" + "Child " + ticketData[purchases[i].ticketType].description + ": $" + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00" + "\n-------------------------------------------\nTOTAL: $" + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00"
+    } else if (ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType] && purchases[i].entrantType === "senior") {
+      return "Thank you for visiting the Dinosaur Museum!\n-------------------------------------------\n" + "Senior " + ticketData[purchases[i].ticketType].description + ": $" + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00" + "\n-------------------------------------------\nTOTAL: $" + ticketData[purchases[i].ticketType].priceInCents[purchases[i].entrantType]/100 +".00"
+    } 
+  }
+ 
+}
 
 // Do not change anything below this line.
 module.exports = {
